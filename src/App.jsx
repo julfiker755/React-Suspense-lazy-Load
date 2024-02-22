@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Container from './shared/Container';
 import Postselector from './components/Postselector';
 import Comments from './components/Comments';
@@ -15,7 +15,9 @@ const App = () => {
    <Container>
         <div>
             <h1 className='font-bold text-2xl py-2'>React Suspense and Error Boundaries</h1>
-            <Postselector onSelectPost={handleSelectPost} />         
+             <Suspense fallback={<h1>Post Loading....</h1>}>
+             <Postselector onSelectPost={handleSelectPost} />
+              </Suspense>         
             {selectedPostId &&  <Comments postId={selectedPostId} />}    
         </div>
    </Container>
