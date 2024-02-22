@@ -1,4 +1,4 @@
-# React Suspense (React js use) Row Implimation
-![login](simple.png)
+# React Lazy Load explained
+![login](lazy.png)
 
 

@@ -1,44 +1,42 @@
 import { Suspense, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import "./App.css";
-import Comments from "./components/Comments";
-import PostSelector from "./components/PostSelector";
+import demos from "./data/demos";
+import importDemo from "./utils/importDemo";
 
 export default function App() {
-    const [selectedPostId, setSelectedPostId] = useState(null);
+    const [selectedDemo, setSelectedDemo] = useState(null);
 
-    const handleSelectPost = (e) => {
-        setSelectedPostId(e.target.value);
+    const loadDemo = async (file) => {
+        const Demo = await importDemo(file);
+        return <Demo />;
     };
+
+    const selectDemo = async (file) => {
+        const DemoComponent = await loadDemo(file);
+        setSelectedDemo(DemoComponent);
+    };
+    
 
     return (
         <div>
-            <h1>React Suspense and Error Boundaries</h1>
-
             <div>
-                <ErrorBoundary
-                    fallback={
-                        <h1 className="error">There was an error occured!</h1>
-                    }
-                >
-                    <Suspense fallback={<h1>Loading posts...</h1>}>
-                        <PostSelector onSelectPost={handleSelectPost} />
-                    </Suspense>
+                <h1>React Lazy load explained</h1>
 
-                    {selectedPostId && (
-                        <ErrorBoundary
-                            fallback={
-                                <h1 className="error">
-                                    There was an error fetching comments
-                                </h1>
-                            }
+                <div>
+                    {demos.map((demo) => (
+                        <button
+                            key={demo.name}
+                            onClick={() => selectDemo(demo.file)}
                         >
-                            <Suspense fallback={<h1>Loading comments...</h1>}>
-                                <Comments postId={selectedPostId} />
-                            </Suspense>
-                        </ErrorBoundary>
-                    )}
-                </ErrorBoundary>
+                            {demo.name}
+                        </button>
+                    ))}
+                </div>
+
+                <div>
+                    <Suspense fallback={<h1>Loading component...</h1>}>
+                        {selectedDemo}
+                    </Suspense>
+                </div>
             </div>
         </div>
     );
